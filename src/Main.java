@@ -15,6 +15,7 @@ public class Main {
       Scanner scanner = new Scanner(System.in);
 
       System.out.println("[*] Program running, Use ethically");
+      safteyChecks();
 
       SecretKey secretKey = AESCore.generateKey();
       String encodedKey = AESCore.toBase64(secretKey);
@@ -74,5 +75,17 @@ public class Main {
       .filter(file -> !file.isDirectory())
       .map(File::getName)
       .collect(Collectors.toSet());
+  }
+  public static void safteyChecks() {
+    Path PATH = Paths.get("./sandbox/");
+    boolean exists = Files.exists(PATH);
+    boolean isDirectory = Files.isDirectory(path);
+    if (!exists || !isDirectory) {
+      Files.createDirectory(PATH);
+      System.out.println("[!] SANDBOX WAS NOT A DIR, SANDBOX IS REQUIRED TO RUN THE PROGRAM\n   Made ./sandbox/ a dir. Exiting now");
+      System.exit(1);
+    } else {
+      System.out.println("Saftey Check Executed...");
+    }
   }
 }
