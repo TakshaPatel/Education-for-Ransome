@@ -1,0 +1,20 @@
+Step 2.
+  1. Loop though files in ./sandbox --Very Important and output them
+  2. Read the text from the files
+  3. Ecrypt the text
+  4. Replace old text with encrypted text
+  5. Imidiatley dycrypt the file with the Base64 secret key
+  6. Make the dycription another program
+  7. Make the Secretkey programable(custom)
+
+2 = 2
+2 = 1 + 1
+2 = 1 + √1
+2 = 1 + √( (-1) * (-1) )
+2 = 1 + ( √(-1) * √-1 )
+2 = 1 + i * i
+2 = 1 + i^2
+2 = 1 + (-1)
+2 = 0 && 2 = 2(Numberline) && 2 = 1! (One raindrop + One raindrop = One big raindrop because of surface tension)
+
+Newton Lied. The apple did not fall on him, he falled on the apple
