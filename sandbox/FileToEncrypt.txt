@@ -1,0 +1,12 @@
+This is a dummy file that will be encrypted. There is just some junk in here. Ignore this, this is where Personal stuff goes
+
+Math is lie
+2 = 2
+2 = 1 + 1
+2 = 1 + √1
+2 = 1 + √( (-1) * (-1)   \
+2 = 1 + ( √(-1) * √-1 )    > ERROR IN MATH
+2 = 1 + i * i
+2 = 1 + i^2
+2 = 1 + (-1)
+2 = 0
