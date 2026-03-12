@@ -6,7 +6,3 @@ We now need some people to make a GUI that explains what ransomware is, step by 
 ## DO NOT DELETE SANDBOX FOLDER
 This folder is intended for safety.    
 
-
-CREDITS:  
-ART/POSTER DESIGN: Yash Bhatt, Muhammad Haider, Zain Attar, Rithvik Chintla   
-ENGINEERING: Taksha Patel  
