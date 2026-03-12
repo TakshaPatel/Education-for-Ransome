@@ -4,9 +4,11 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 import java.util.Base64;
 
+
 class AESCore {
-  private static final String ALGORITHM = "AES";
-    private static final int KEY_SIZE = 256;
+    private static final String ALGORITHM      = "AES";
+    private static final String TRANSFORMATION = "AES/ECB/PKCS5Padding";
+    private static final int    KEY_SIZE        = 256;
 
     public static SecretKey generateKey() throws Exception {
         KeyGenerator keyGen = KeyGenerator.getInstance(ALGORITHM);
@@ -19,17 +21,21 @@ class AESCore {
         return new SecretKeySpec(decoded, ALGORITHM);
     }
 
+    public static String toBase64(SecretKey key) {
+        return Base64.getEncoder().encodeToString(key.getEncoded());
+    }
+
     public static String encrypt(String plaintext, SecretKey key) throws Exception {
-        Cipher cipher = Cipher.getInstance(ALGORITHM);
+        Cipher cipher = Cipher.getInstance(TRANSFORMATION);
         cipher.init(Cipher.ENCRYPT_MODE, key);
         byte[] encrypted = cipher.doFinal(plaintext.getBytes("UTF-8"));
         return Base64.getEncoder().encodeToString(encrypted);
     }
 
     public static String decrypt(String base64Ciphertext, SecretKey key) throws Exception {
-        Cipher cipher = Cipher.getInstance(ALGORITHM);
+        Cipher cipher = Cipher.getInstance(TRANSFORMATION);
         cipher.init(Cipher.DECRYPT_MODE, key);
-        byte[] decoded = Base64.getDecoder().decode(base64Ciphertext);
+        byte[] decoded   = Base64.getDecoder().decode(base64Ciphertext);
         byte[] decrypted = cipher.doFinal(decoded);
         return new String(decrypted, "UTF-8");
     }
@@ -42,7 +48,15 @@ class AESCore {
         return decrypt(base64Ciphertext, keyFromBase64(base64Key));
     }
 
-    public static String toBase64(SecretKey key) {
-        return Base64.getEncoder().encodeToString(key.getEncoded());
+    public static byte[] encryptBytes(byte[] data, SecretKey key) throws Exception {
+        Cipher cipher = Cipher.getInstance(TRANSFORMATION);
+        cipher.init(Cipher.ENCRYPT_MODE, key);
+        return cipher.doFinal(data);
+    }
+
+    public static byte[] decryptBytes(byte[] encryptedData, SecretKey key) throws Exception {
+        Cipher cipher = Cipher.getInstance(TRANSFORMATION);
+        cipher.init(Cipher.DECRYPT_MODE, key);
+        return cipher.doFinal(encryptedData);
     }
 }
